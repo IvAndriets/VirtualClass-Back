@@ -1,0 +1,120 @@
+{
+  "allowRemoteResourceManagement": true,
+  "policyEnforcementMode": "ENFORCING",
+  "resources": [
+    {
+      "name": "Default Resource",
+      "type": "urn:virtual-class:resources:default",
+      "ownerManagedAccess": false,
+      "attributes": {},
+      "_id": "5e021dad-0d96-4081-ba9e-c463c227d51c",
+      "uris": [
+        "/*"
+      ]
+    }
+  ],
+  "policies": [
+    {
+      "id": "15f98217-ecc4-42d4-ac9c-33ee29b7ae71",
+      "name": "Default Policy",
+      "description": "A policy that grants access only for users within this realm",
+      "type": "js",
+      "logic": "POSITIVE",
+      "decisionStrategy": "AFFIRMATIVE",
+      "config": {
+        "code": "// by default, grants any permission associated with this policy\n$evaluation.grant();\n"
+      }
+    },
+    {
+      "id": "44cf2310-9e52-4260-83f6-c6b3d898178f",
+      "name": "Teacher-policy",
+      "description": "Teacher policy",
+      "type": "role",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "roles": "[{\"id\":\"virtual-class/Teacher\",\"required\":true}]"
+      }
+    },
+    {
+      "id": "97b2c272-3c97-48b5-a7d9-6e89b124dc51",
+      "name": "Student-policy",
+      "description": "Student policy",
+      "type": "role",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "roles": "[{\"id\":\"virtual-class/Student\",\"required\":true}]"
+      }
+    },
+    {
+      "id": "7565a692-397f-412b-8250-d624d8f3fd60",
+      "name": "Default Permission",
+      "description": "A permission that applies to the default resource type",
+      "type": "resource",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "defaultResourceType": "urn:virtual-class:resources:default",
+        "applyPolicies": "[\"Default Policy\"]"
+      }
+    },
+    {
+      "id": "ab34db10-3565-4ea6-ad54-ee55aa8981f2",
+      "name": "teacher-access",
+      "description": "Allow access teachers resources",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "scopes": "[\"Class:delete\",\"Class:update\",\"User:manage\",\"Class:view\",\"Class:add\"]",
+        "applyPolicies": "[\"Teacher-policy\"]"
+      }
+    },
+    {
+      "id": "b5a299c2-519a-4bd3-926e-37d7b046e701",
+      "name": "students-view-access",
+      "description": "",
+      "type": "scope",
+      "logic": "POSITIVE",
+      "decisionStrategy": "UNANIMOUS",
+      "config": {
+        "scopes": "[\"User:manage\",\"Class:view\"]",
+        "applyPolicies": "[\"Student-policy\"]"
+      }
+    }
+  ],
+  "scopes": [
+    {
+      "id": "d869468e-ab35-4b5d-84dc-03b90af52495",
+      "name": "Class:add",
+      "iconUri": "",
+      "displayName": "Class add"
+    },
+    {
+      "id": "69324e8c-b8fc-47bf-9fcf-85cc082deea1",
+      "name": "Class:delete",
+      "iconUri": "",
+      "displayName": "Class delete"
+    },
+    {
+      "id": "22fcf48b-978b-4b37-9c60-89e139f0d48f",
+      "name": "Class:update",
+      "iconUri": "",
+      "displayName": "Class update"
+    },
+    {
+      "id": "3d75fea6-1dbe-44c2-814a-cd01544043b4",
+      "name": "Class:view",
+      "iconUri": "",
+      "displayName": "Class view"
+    },
+    {
+      "id": "4394503f-94fe-4892-a9f2-3e1853a0c1a7",
+      "name": "User:manage",
+      "iconUri": "",
+      "displayName": "User profile manage"
+    }
+  ],
+  "decisionStrategy": "UNANIMOUS"
+}

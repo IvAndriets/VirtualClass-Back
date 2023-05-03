@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:21.1.1
+    command: start-dev
+    platform: linux/arm64
+    restart: always
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - '18080:8080'
+      - '18443:8443'
+    volumes:
+      - v-class-keycloak:/data
+
+  db:
+    image: postgres:13-alpine
+    ports:
+      - "5432:5432"
+    volumes:
+      - v-class-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=vClass
+      - POSTGRES_USER=vClass
+      - POSTGRES_PASSWORD=vClass
+
+volumes:
+  v-class-db-data:
+  v-class-keycloak:
