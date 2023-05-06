@@ -1,6 +1,6 @@
 from rest_framework import (viewsets, permissions)
 from core.models import Course
-from course.serializers import CoursesSerializer
+from course.serializers import CoursesSerializer, CoursesSerializerDetail
 
 
 class CourseViewSet(viewsets.ModelViewSet):
@@ -38,3 +38,9 @@ class CourseViewSet(viewsets.ModelViewSet):
         queryset = self.queryset
         query_set = queryset.filter(owner=self.request.user.id)
         return query_set
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return CoursesSerializer
+        else:
+            return CoursesSerializerDetail

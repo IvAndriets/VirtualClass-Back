@@ -85,7 +85,7 @@ class StudentsCourse(CommonInfo):
 
 class Lecture(CommonInfo):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    course = models.ForeignKey(Course, on_delete=models.RESTRICT)
+    course = models.ForeignKey(Course, on_delete=models.RESTRICT, related_name='lectures')
     name = models.CharField(max_length=255, unique=True)
     description = models.CharField(max_length=255)
     active = models.BooleanField(default=True)

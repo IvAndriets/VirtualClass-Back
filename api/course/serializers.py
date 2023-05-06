@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from core.models import Course
+from lecture.serializers import LectureSerializer
 
 
 class CoursesSerializer(serializers.HyperlinkedModelSerializer):
@@ -13,6 +14,25 @@ class CoursesSerializer(serializers.HyperlinkedModelSerializer):
             'name',
             'active',
             'description',
+            'owner',
+            'created_at',
+            'updated_at',
+            'updated_by',
+        ]
+        read_only_fields = ['id', 'owner', 'active', 'created_at', 'updated_at', 'updated_by']
+
+
+class CoursesSerializerDetail(CoursesSerializer):
+    lectures = LectureSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Course
+        fields = [
+            'id',
+            'name',
+            'active',
+            'description',
+            'lectures',
             'owner',
             'created_at',
             'updated_at',
