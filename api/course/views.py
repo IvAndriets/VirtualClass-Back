@@ -33,3 +33,8 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user)
+
+    def get_queryset(self):
+        queryset = self.queryset
+        query_set = queryset.filter(owner=self.request.user.id)
+        return query_set
