@@ -153,7 +153,7 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '1.0.0',
     'PREPROCESSING_HOOKS': ['spectacular.hooks.remove_apis_from_list'],
     # Custom Spectacular Settings
-    'EXCLUDE_PATH': [reverse_lazy('schema'), '/join/'],
+    'EXCLUDE_PATH': [reverse_lazy('schema'), '/join/{pk}/'],
     'COMPONENT_SPLIT_REQUEST': True,
 }
 
