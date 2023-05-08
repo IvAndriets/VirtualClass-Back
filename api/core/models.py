@@ -92,3 +92,9 @@ class Lecture(CommonInfo):
     description = models.CharField(max_length=255)
     full_description = models.TextField(null=True, blank=True)
     active = models.BooleanField(default=True)
+
+
+class Comments(CommonInfo):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    lecture = models.ForeignKey(Lecture, on_delete=models.RESTRICT)
+    comment = models.TextField(null=True, blank=True)

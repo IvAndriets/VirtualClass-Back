@@ -28,5 +28,6 @@ urlpatterns += [
     path('api/links/', include('join_links.urls')),
     path('api/users/', include('user.urls')),
     path('api/courses/', include('course.urls')),
+    path('api/comments/', include('comments.urls')),
     path('api/enlisted-students/', include('enlisted_students.urls')),
 ]
