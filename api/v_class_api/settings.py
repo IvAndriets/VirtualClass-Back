@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'course',
     'core',
     'user',
+    'join_links',
+    'lecture',
 ]
 
 MIDDLEWARE = [
@@ -58,7 +60,9 @@ ROOT_URLCONF = 'v_class_api.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates/'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -149,7 +153,7 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '1.0.0',
     'PREPROCESSING_HOOKS': ['spectacular.hooks.remove_apis_from_list'],
     # Custom Spectacular Settings
-    'EXCLUDE_PATH': [reverse_lazy('schema')],
+    'EXCLUDE_PATH': [reverse_lazy('schema'), '/join/'],
     'COMPONENT_SPLIT_REQUEST': True,
 }
 

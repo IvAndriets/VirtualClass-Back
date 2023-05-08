@@ -2,11 +2,14 @@ from django.urls import (path)
 from course.views import CourseViewSet
 from lecture.views import LectureViewSet
 
-class_list = CourseViewSet.as_view({
+app_name = 'Course'
+
+course_list = CourseViewSet.as_view({
     'get': 'list',
     'post': 'create'
 })
-class_detail = CourseViewSet.as_view({
+
+course_detail = CourseViewSet.as_view({
     'get': 'retrieve',
     'put': 'update',
     'patch': 'partial_update',
@@ -17,6 +20,7 @@ lecture_list = LectureViewSet.as_view({
     'get': 'list',
     'post': 'create'
 })
+
 lecture_detail = LectureViewSet.as_view({
     'get': 'retrieve',
     'put': 'update',
@@ -25,8 +29,8 @@ lecture_detail = LectureViewSet.as_view({
 })
 
 urlpatterns = [
-    path('', class_list, name='class-list'),
-    path('<str:pk>/', class_detail, name='class-detail'),
+    path('', course_list, name='class-list'),
+    path('<str:pk>/', course_detail, name='class-detail'),
     path('<str:course_id>/lectures/', lecture_list, name='lecture-list'),
     path('<str:course_id>/lectures/<str:pk>/', lecture_detail, name='lecture-detail'),
 ]

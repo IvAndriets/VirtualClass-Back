@@ -61,20 +61,22 @@ class Course(CommonInfo):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255, unique=True)
     description = models.CharField(max_length=255)
+    full_description = models.TextField(null=True, blank=True)
     active = models.BooleanField(default=True)
 
 
 class CourseLinks(CommonInfo):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    link = models.CharField(max_length=255, unique=True)
+    access_code = models.CharField(max_length=255, unique=True, db_index=True)
+    use_access_code = models.BooleanField(default=False)
     course = models.ForeignKey(Course, on_delete=models.RESTRICT)
     active = models.BooleanField(default=True)
 
 
 class StudentsCourse(CommonInfo):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    link = models.CharField(max_length=255, unique=True)
     course = models.ForeignKey(Course, on_delete=models.RESTRICT)
+    join_link = models.ForeignKey(CourseLinks, on_delete=models.RESTRICT)
     student = models.ForeignKey(
         User,
         on_delete=models.RESTRICT,
@@ -88,4 +90,5 @@ class Lecture(CommonInfo):
     course = models.ForeignKey(Course, on_delete=models.RESTRICT, related_name='lectures')
     name = models.CharField(max_length=255, unique=True)
     description = models.CharField(max_length=255)
+    full_description = models.TextField(null=True, blank=True)
     active = models.BooleanField(default=True)

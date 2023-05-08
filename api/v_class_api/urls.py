@@ -24,6 +24,8 @@ urlpatterns = router.urls
 urlpatterns += [
     path('api/', include('spectacular.urls')),
     path('admin/', admin.site.urls),
+    path('join/', include('join_links.urls_form', namespace='join')),
+    path('api/links/', include('join_links.urls')),
     path('api/users/', include('user.urls')),
     path('api/courses/', include('course.urls')),
 ]
