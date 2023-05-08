@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from core.models import Course
+from enlisted_students.serializers import EnlistedStudentsSerializer
 from lecture.serializers import LectureSerializer
 
 
@@ -24,6 +25,7 @@ class CoursesSerializer(serializers.HyperlinkedModelSerializer):
 
 class CoursesSerializerDetail(CoursesSerializer):
     lectures = LectureSerializer(many=True, read_only=True)
+    students = EnlistedStudentsSerializer(many=True, read_only=True)
 
     class Meta:
         model = Course
@@ -32,7 +34,9 @@ class CoursesSerializerDetail(CoursesSerializer):
             'name',
             'active',
             'description',
+            'full_description',
             'lectures',
+            'students',
             'owner',
             'created_at',
             'updated_at',

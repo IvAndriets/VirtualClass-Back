@@ -75,7 +75,7 @@ class CourseLinks(CommonInfo):
 
 class StudentsCourse(CommonInfo):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    course = models.ForeignKey(Course, on_delete=models.RESTRICT)
+    course = models.ForeignKey(Course, on_delete=models.RESTRICT, related_name='students')
     join_link = models.ForeignKey(CourseLinks, on_delete=models.RESTRICT)
     student = models.ForeignKey(
         User,
