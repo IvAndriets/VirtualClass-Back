@@ -13,20 +13,22 @@ class EnlistedStudentsViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     pagination_class = None
 
-    filterset_fields = {}
-
-    search_fields = []
-    ordering_fields = '__all__'
-
     keycloak_scopes = {
         'GET': 'Class:view',
-        'DELETE': 'Class:delete'
+        'DELETE': 'Class:delete',
     }
 
-    def get_queryset(self):
+    @extend_schema(
+        parameters=[
+            OpenApiParameter('course_id', OpenApiTypes.UUID, OpenApiParameter.QUERY, required=True),
+        ],
+    )
+    def list(self, request, *args, **kwargs):
         queryset = self.queryset
+        course_id = request.query_params.get('course_id')
 
-        course_id = self.request.query_params.get('course_id')
+        if 'course_id' not in self.request.query_params:
+            raise ValidationError('Missing required parameters course_id')
 
         try:
             course = Course.objects.get(id=course_id)
@@ -36,16 +38,6 @@ class EnlistedStudentsViewSet(viewsets.ModelViewSet):
             return JsonResponse({"detail": "Incorrect course ID."},
                                 status=status.HTTP_400_BAD_REQUEST)
 
-        if 'course_id' not in self.request.query_params:
-            raise ValidationError('Missing required parameters course_id')
+        self.queryset = queryset.filter(course=course)
 
-        query_set = queryset.filter(course=course)
-        return query_set
-
-    @extend_schema(
-        parameters=[
-            OpenApiParameter('course_id', OpenApiTypes.UUID, OpenApiParameter.QUERY, required=True),
-        ],
-    )
-    def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)

@@ -100,7 +100,12 @@ class CourseLinksViewSet(viewsets.ModelViewSet):
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user)
 
-    def get_queryset(self):
+    @extend_schema(
+        parameters=[
+            OpenApiParameter('course_id', OpenApiTypes.UUID, OpenApiParameter.QUERY, required=True),
+        ],
+    )
+    def list(self, request, *args, **kwargs):
         queryset = self.queryset
 
         course_id = self.request.query_params.get('course_id')
@@ -108,13 +113,6 @@ class CourseLinksViewSet(viewsets.ModelViewSet):
         if 'course_id' not in self.request.query_params:
             raise ValidationError('Missing required parameters course_id')
 
-        query_set = queryset.filter(owner=self.request.user.id, course_id=course_id)
-        return query_set
+        self.queryset = queryset.filter(owner=self.request.user.id, course_id=course_id)
 
-    @extend_schema(
-        parameters=[
-            OpenApiParameter('course_id', OpenApiTypes.UUID, OpenApiParameter.QUERY, required=True),
-        ],
-    )
-    def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
