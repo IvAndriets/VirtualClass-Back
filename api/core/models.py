@@ -85,6 +85,12 @@ class StudentsCourse(CommonInfo):
     )
 
 
+LECTURE_TYPE_CHOICES = [
+    ('lecture', 'lecture'),
+    ('lab', 'lab'),
+]
+
+
 class Lecture(CommonInfo):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     course = models.ForeignKey(Course, on_delete=models.RESTRICT, related_name='lectures')
@@ -92,6 +98,9 @@ class Lecture(CommonInfo):
     description = models.CharField(max_length=255)
     full_description = models.TextField(null=True, blank=True)
     active = models.BooleanField(default=True)
+    type = models.CharField(max_length=10, choices=LECTURE_TYPE_CHOICES, default='lecture', null=False, blank=False)
+    max_grade = models.IntegerField(null=True)
+    due_date = models.DateTimeField(null=True)
 
 
 class Comments(CommonInfo):
