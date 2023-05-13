@@ -1,14 +1,13 @@
-import os, uuid, mimetypes
+import uuid
 from rest_framework import serializers
-from django.http import JsonResponse, FileResponse
+from django.http import JsonResponse
 from drf_spectacular.utils import extend_schema, inline_serializer
 from rest_framework import (viewsets, permissions, status)
 from rest_framework.exceptions import ParseError
-from rest_framework.generics import get_object_or_404
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from core.models import Course, Lecture, FileInfo
+from core.models import Course, Lecture
 from course.serializers import CoursesSerializer, CoursesSerializerDetail, DescriptionSerializer
 from files.serializers import FileSerializer
 from v_class_api.settings import FILE_STORAGE
@@ -98,28 +97,3 @@ class LectureFilesView(APIView):
         lecture.files.add(file)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-
-class LectureGetFileView(APIView):
-    parser_classes = [MultiPartParser]
-    permission_classes = [permissions.AllowAny]
-
-    def get_serializer_class(self):
-        return DescriptionSerializer
-
-    def get(self, request, course_id=None, lecture_id=None, file_id=None):
-        file_object = get_object_or_404(FileInfo, id=file_id)
-
-        file_path = FILE_STORAGE + str(file_object.file_id)
-        file_name = file_object.file_name
-
-        try:
-            file = open(file_path, 'rb')
-        except FileNotFoundError:
-            return JsonResponse({'detail': 'File not found'}, status=status.HTTP_404_NOT_FOUND)
-
-        mimetype, _ = mimetypes.guess_type(file_name)
-        response = FileResponse(file, content_type=mimetype)
-        response['Content-Length'] = os.path.getsize(file_path)
-        response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
-        return response

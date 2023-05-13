@@ -1,12 +1,16 @@
-import os, uuid, mimetypes
+import mimetypes
+import os
+import uuid
+
 from django.http import FileResponse, JsonResponse
 from drf_spectacular.utils import extend_schema
-from rest_framework import permissions, status, viewsets
+from rest_framework import permissions, status
 from rest_framework.exceptions import ParseError
 from rest_framework.generics import get_object_or_404
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
 from core.models import FileInfo
 from files.serializers import FileSerializer
 from v_class_api.settings import FILE_STORAGE
@@ -73,18 +77,3 @@ class FileDownloadView(APIView):
         response['Content-Length'] = os.path.getsize(file_path)
         response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
         return response
-
-
-# TODO test hyper link
-class FileView(viewsets.ModelViewSet):
-    queryset = FileInfo.objects.all()
-    serializer_class = FileSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    keycloak_scopes = {
-        'GET': 'Class:view',
-        'POST': 'Class:add',
-        'PATCH': 'Class:update',
-        'PUT': 'Class:update',
-        'DELETE': 'Class:delete'
-    }

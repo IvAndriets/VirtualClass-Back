@@ -7,27 +7,13 @@ class LectureSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.email')
     updated_by = serializers.ReadOnlyField(source='updated_by.email')
     course = serializers.ReadOnlyField(source='course.id')
-    # files = serializers.SlugRelatedField(slug_field='file_name', queryset=FileInfo.objects.all(), many=True)
-    # files = serializers.HyperlinkedRelatedField(
-    #     view_name='download-file',
-    #     lookup_field='file_name',
-    #     many=True,
-    #     read_only=True,
-    # )
     # files = serializers.HyperlinkedIdentityField(
-    #     view_name='files-list',
-    #     lookup_field='file_name',
+    #     view_name='files:download-file',
+    #     lookup_field='file_id',
     #     many=True,
     #     read_only=True,
     # )
-    # files = FileSerializer(
-    #     view_name='file-detail',
-    #     # lookup_field='name',
-    #     queryset=FileInfo.objects.all(),
-    #     many=True,
-    #     # read_only=True,
-    # )
-    files = FileSerializer(many=True, read_only=True)
+    files = FileSerializer(many=True)
 
     class Meta:
         model = Lecture

@@ -5,11 +5,16 @@ from core.models import FileInfo
 class FileSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.email')
     updated_by = serializers.ReadOnlyField(source='updated_by.email')
+    url = serializers.HyperlinkedIdentityField(
+        view_name='files:download-file',
+        lookup_field='file_id'
+    )
 
     class Meta:
         model = FileInfo
         fields = [
             'id',
+            'url',
             'file_id',
             'file_name',
             'description',
@@ -21,21 +26,14 @@ class FileSerializer(serializers.HyperlinkedModelSerializer):
         read_only_fields = ['id', 'file_id', 'file_name', 'owner', 'created_at', 'updated_at', 'updated_by']
 
 
-# TODO try to use it
-# class FileSerializer(serializers.HyperlinkedRelatedField):
-#     # We define these as class attributes, so we don't need to pass them as arguments.
-#     view_name = 'file-detail'
+# Example of custom hyperlink sertializer
+# class CustomFileSerializer(serializers.HyperlinkedRelatedField):
+#     view_name = 'files:download-file'
 #     queryset = FileInfo.objects.all()
 #
 #     def get_url(self, obj, view_name, request, format):
-#         print('#########')
-#
-#         print(obj)
-#         print(view_name)
-#         # return Response()
 #         url_kwargs = {
-#             'organization_slug': obj.file_id,
-#             'customer_pk': obj.pk
+#             'file_id': str(obj.pk)
 #         }
 #         return reverse(view_name, kwargs=url_kwargs, request=request, format=format)
 #
