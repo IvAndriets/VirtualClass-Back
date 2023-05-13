@@ -82,7 +82,8 @@ class LectureFilesView(APIView):
             file_name = file_obj.name
             file_id = uuid.uuid4()
 
-            serializer = FileSerializer(data={'file_id': file_id, 'file_name': file_name, description: description})
+            serializer = FileSerializer(data={'file_id': file_id, 'file_name': file_name, description: description},
+                                        context={'request': request})
             serializer.is_valid()
             file = serializer.save(owner=request.user, file_id=file_id, file_name=file_name, description=description)
 
