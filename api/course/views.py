@@ -58,7 +58,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 class LectureFilesView(APIView):
     parser_classes = [MultiPartParser]
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_serializer_class(self):
         return DescriptionSerializer
@@ -92,7 +92,7 @@ class LectureFilesView(APIView):
                 destination.write(chunk)
             destination.close()
         except Exception as exc:
-            return JsonResponse({'detail': 'Something wne wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return JsonResponse({'detail': 'Something went wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         lecture = Lecture.objects.get(id=lecture_id)
         lecture.files.add(file)

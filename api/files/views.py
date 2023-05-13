@@ -52,7 +52,7 @@ class FileUploadView(APIView):
                 destination.write(chunk)
             destination.close()
         except Exception as exc:
-            return JsonResponse({'detail': 'Something wne wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return JsonResponse({'detail': 'Something went wrong'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 

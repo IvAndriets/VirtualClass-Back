@@ -117,8 +117,10 @@ class Comments(CommonInfo):
     comment = models.TextField(null=True, blank=True)
 
 
-# class LectureFiles(CommonInfo):
-#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-#     lecture = models.ForeignKey(Lecture, on_delete=models.RESTRICT)
-#     file = models.ForeignKey(FileInfo, on_delete=models.RESTRICT)
-#     description = models.CharField(max_length=255)
+# TODO add primary key lecture+student
+class Homeworks(CommonInfo):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    lecture = models.ForeignKey(Lecture, on_delete=models.RESTRICT)
+    file = models.ForeignKey(FileInfo, on_delete=models.RESTRICT)
+    mark = models.IntegerField(null=True)
+    teacher_comment = models.TextField(null=True, blank=True)

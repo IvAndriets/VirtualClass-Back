@@ -29,6 +29,7 @@ urlpatterns += [
     path('api/users/', include('user.urls')),
     path('api/courses/', include('course.urls')),
     path('api/comments/', include('comments.urls')),
+    path('api/homeworks/', include('homework.urls')),
     path('api/enlisted-students/', include('enlisted_students.urls')),
     path('api/files/', include('files.urls', namespace='files')),
 ]
