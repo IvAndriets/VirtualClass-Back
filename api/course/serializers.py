@@ -43,3 +43,7 @@ class CoursesSerializerDetail(CoursesSerializer):
             'updated_by',
         ]
         read_only_fields = ['id', 'owner', 'active', 'created_at', 'updated_at', 'updated_by']
+
+
+class DescriptionSerializer(serializers.Serializer):
+    description = serializers.CharField(max_length=255)

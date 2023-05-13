@@ -187,3 +187,5 @@ SIMPLE_JWT = {
     ),
     'TOKEN_TYPE_CLAIM': 'typ',
 }
+
+FILE_STORAGE = os.environ.get('FILES_PATH')

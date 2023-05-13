@@ -1,5 +1,5 @@
 from django.urls import (path)
-from course.views import CourseViewSet
+from course.views import CourseViewSet, LectureFilesView, LectureGetFileView
 from lecture.views import LectureViewSet
 
 app_name = 'Course'
@@ -33,4 +33,7 @@ urlpatterns = [
     path('<str:pk>/', course_detail, name='class-detail'),
     path('<str:course_id>/lectures/', lecture_list, name='lecture-list'),
     path('<str:course_id>/lectures/<str:pk>/', lecture_detail, name='lecture-detail'),
+    path('<str:course_id>/lectures/<str:lecture_id>/files/', LectureFilesView.as_view(), name='lecture-detail-files'),
+    path('<str:course_id>/lectures/<str:lecture_id>/files/<str:file_id>',
+         LectureGetFileView.as_view(), name='lecture-get-file'),
 ]

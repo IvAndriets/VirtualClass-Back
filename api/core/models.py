@@ -57,6 +57,13 @@ class CommonInfo(models.Model):
         abstract = True
 
 
+class FileInfo(CommonInfo):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    file_id = models.UUIDField(default=uuid.uuid4, editable=False)
+    file_name = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
+
+
 class Course(CommonInfo):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255, unique=True)
@@ -101,9 +108,17 @@ class Lecture(CommonInfo):
     type = models.CharField(max_length=10, choices=LECTURE_TYPE_CHOICES, default='lecture', null=False, blank=False)
     max_grade = models.IntegerField(null=True)
     due_date = models.DateTimeField(null=True)
+    files = models.ManyToManyField(FileInfo)
 
 
 class Comments(CommonInfo):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     lecture = models.ForeignKey(Lecture, on_delete=models.RESTRICT)
     comment = models.TextField(null=True, blank=True)
+
+
+# class LectureFiles(CommonInfo):
+#     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+#     lecture = models.ForeignKey(Lecture, on_delete=models.RESTRICT)
+#     file = models.ForeignKey(FileInfo, on_delete=models.RESTRICT)
+#     description = models.CharField(max_length=255)

@@ -30,4 +30,5 @@ urlpatterns += [
     path('api/courses/', include('course.urls')),
     path('api/comments/', include('comments.urls')),
     path('api/enlisted-students/', include('enlisted_students.urls')),
+    path('api/files/', include('files.urls')),
 ]
