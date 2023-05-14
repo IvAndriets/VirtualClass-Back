@@ -17,3 +17,4 @@ python-jose==3.3.0
 djangorestframework-simplejwt==5.2.2
 markdown==3.4.1
 # djangorestframework-simplejwt[crypto]==5.2.2
+cryptography==40.0.2
