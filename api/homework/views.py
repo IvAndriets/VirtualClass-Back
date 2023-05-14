@@ -106,9 +106,4 @@ class HomeworkCreateViewSet(mixins.CreateModelMixin,
         homework.teacher_comment = rate_serializer.validated_data.get('teacher_comment')
         homework.save()
 
-        # serializer = HomeworksSerializer(homework, context={'request': request})
-        # serializer.is_valid()
-
-        # serializer.save()
-
         return Response(HomeworksSerializer(homework, context={'request': request}).data, status.HTTP_200_OK)

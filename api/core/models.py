@@ -124,3 +124,6 @@ class Homeworks(CommonInfo):
     file = models.ForeignKey(FileInfo, on_delete=models.RESTRICT)
     mark = models.IntegerField(null=True)
     teacher_comment = models.TextField(null=True, blank=True)
+
+    class Meta:
+        unique_together = ('lecture', 'owner',)

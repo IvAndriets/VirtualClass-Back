@@ -1,12 +1,18 @@
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework.exceptions import ValidationError
+from rest_framework.viewsets import GenericViewSet
+
 from comments.serializers import CommentsSerializer
 from core.models import Comments
-from rest_framework import (viewsets, permissions)
+from rest_framework import (permissions, mixins)
 
 
-class CommentsViewSet(viewsets.ModelViewSet):
+class CommentsViewSet(mixins.CreateModelMixin,
+                      mixins.RetrieveModelMixin,
+                      mixins.DestroyModelMixin,
+                      mixins.ListModelMixin,
+                      GenericViewSet):
     queryset = Comments.objects.all()
     serializer_class = CommentsSerializer
     permission_classes = [permissions.IsAuthenticated]
