@@ -1,11 +1,13 @@
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework.exceptions import ValidationError
+from rest_framework.generics import get_object_or_404
+from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from comments.serializers import CommentsSerializer
 from core.models import Comments
-from rest_framework import (permissions, mixins)
+from rest_framework import (permissions, mixins, status)
 
 
 class CommentsViewSet(mixins.CreateModelMixin,
@@ -54,3 +56,11 @@ class CommentsViewSet(mixins.CreateModelMixin,
         self.queryset = queryset.filter(owner=self.request.user.id, lecture_id=lecture_id)
 
         return super().list(request, *args, **kwargs)
+
+    def destroy(self, request, pk=None, *args, **kwargs):
+        lecture = get_object_or_404(Comments, id=pk)
+
+        if lecture.owner == request.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        return super().destroy(request, *args, **kwargs)
