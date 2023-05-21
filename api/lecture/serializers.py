@@ -13,7 +13,7 @@ class LectureSerializer(serializers.HyperlinkedModelSerializer):
     #     many=True,
     #     read_only=True,
     # )
-    files = FileSerializer(many=True)
+    files = FileSerializer(many=True, read_only=True)
 
     class Meta:
         model = Lecture
