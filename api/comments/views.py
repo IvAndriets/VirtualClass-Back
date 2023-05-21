@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from comments.serializers import CommentsSerializer
-from core.models import Comments
+from core.models import Comments, Lecture
 from rest_framework import (permissions, mixins, status)
 
 
@@ -58,7 +58,8 @@ class CommentsViewSet(mixins.CreateModelMixin,
         return super().list(request, *args, **kwargs)
 
     def destroy(self, request, pk=None, *args, **kwargs):
-        lecture = get_object_or_404(Comments, id=pk)
+        comment = get_object_or_404(Comments, id=pk)
+        lecture = get_object_or_404(Lecture, id=comment.lecture_id)
 
         if lecture.owner == request.user:
             return Response(status=status.HTTP_403_FORBIDDEN)
