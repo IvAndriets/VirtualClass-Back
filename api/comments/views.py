@@ -59,9 +59,10 @@ class CommentsViewSet(mixins.CreateModelMixin,
         if self.is_student():
             crs = Course.objects.prefetch_related('students').filter(students__student=self.request.user)
             lectures = Lecture.objects.prefetch_related(Prefetch('course', queryset=crs))
-            query_set = Comments.objects.prefetch_related(Prefetch('lecture', queryset=lectures))
+            query_set = Comments.objects.prefetch_related(Prefetch('lecture', queryset=lectures))\
+                .filter(lecture_id=lecture_id)
         else:
-            query_set = queryset.filter(owner=self.request.user.id, lecture_id=lecture_id)
+            query_set = queryset.filter(lecture_id=lecture_id)
 
         self.queryset = query_set
 
