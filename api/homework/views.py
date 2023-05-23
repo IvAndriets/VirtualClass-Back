@@ -1,3 +1,4 @@
+import os
 import uuid
 
 from drf_spectacular.types import OpenApiTypes
@@ -30,17 +31,29 @@ class HomeworkCreateViewSet(mixins.CreateModelMixin,
 
     keycloak_scopes = {
         'GET': 'Class:view',
-        'POST': 'Class:add',
-        'PATCH': 'Class:update',
-        'PUT': 'Class:update',
-        'DELETE': 'Class:delete'
+        'POST': 'Class:view',
+        'DELETE': 'Class:view'
     }
+
+    def get_queryset(self):
+        queryset = self.queryset
+
+        if self.is_student():
+            query_set = Homeworks.objects.filter(owner=self.request.user)
+        else:
+            query_set = queryset
+
+        return query_set
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
 
     def perform_update(self, serializer):
         serializer.save(updated_by=self.request.user)
+
+    def destroy(self, request, pk=None, *args, **kwargs):
+        get_object_or_404(Homeworks, id=pk, owner=request.user)
+        return super().destroy(request, *args, **kwargs)
 
     @extend_schema(
         parameters=[
@@ -107,3 +120,7 @@ class HomeworkCreateViewSet(mixins.CreateModelMixin,
         homework.save()
 
         return Response(HomeworksSerializer(homework, context={'request': request}).data, status.HTTP_200_OK)
+
+    def is_student(self):
+        roles = self.request.auth.payload['resource_access'][os.environ.get('OIDC_RP_CLIENT_ID')]['roles']
+        return 'Student' in roles
