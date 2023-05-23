@@ -1,4 +1,7 @@
+import os
+
 from django.core.exceptions import ValidationError
+from django.db.models import Prefetch
 from django.http import Http404, JsonResponse
 from rest_framework import (viewsets, permissions)
 from core.models import Lecture, Course
@@ -54,7 +57,13 @@ class LectureViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = self.queryset
-        query_set = queryset.filter(owner=self.request.user.id)
+
+        if self.is_student():
+            crs = Course.objects.prefetch_related('students').filter(students__student=self.request.user)
+            query_set = Lecture.objects.prefetch_related(Prefetch('course', queryset=crs))
+        else:
+            query_set = queryset.filter(owner=self.request.user.id)
+
         return query_set
 
     def list(self, request, *args, **kwargs):
@@ -70,3 +79,7 @@ class LectureViewSet(viewsets.ModelViewSet):
 
         self.queryset = Lecture.objects.filter(course_id=course.id)
         return super().list(request, *args, **kwargs)
+
+    def is_student(self):
+        roles = self.request.auth.payload['resource_access'][os.environ.get('OIDC_RP_CLIENT_ID')]['roles']
+        return 'Student' in roles
