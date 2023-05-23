@@ -1,3 +1,6 @@
+import os
+
+from django.db.models import Prefetch
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework.exceptions import ValidationError
@@ -6,7 +9,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from comments.serializers import CommentsSerializer
-from core.models import Comments, Lecture
+from core.models import Comments, Lecture, Course
 from rest_framework import (permissions, mixins, status)
 
 
@@ -53,7 +56,14 @@ class CommentsViewSet(mixins.CreateModelMixin,
         if 'lecture_id' not in self.request.query_params:
             raise ValidationError('Missing required parameters lecture_id')
 
-        self.queryset = queryset.filter(owner=self.request.user.id, lecture_id=lecture_id)
+        if self.is_student():
+            crs = Course.objects.prefetch_related('students').filter(students__student=self.request.user)
+            lectures = Lecture.objects.prefetch_related(Prefetch('course', queryset=crs))
+            query_set = Comments.objects.prefetch_related(Prefetch('lecture', queryset=lectures))
+        else:
+            query_set = queryset.filter(owner=self.request.user.id, lecture_id=lecture_id)
+
+        self.queryset = query_set
 
         return super().list(request, *args, **kwargs)
 
@@ -65,3 +75,7 @@ class CommentsViewSet(mixins.CreateModelMixin,
             return Response(status=status.HTTP_403_FORBIDDEN)
 
         return super().destroy(request, *args, **kwargs)
+
+    def is_student(self):
+        roles = self.request.auth.payload['resource_access'][os.environ.get('OIDC_RP_CLIENT_ID')]['roles']
+        return 'Student' in roles
