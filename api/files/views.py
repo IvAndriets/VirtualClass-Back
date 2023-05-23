@@ -62,7 +62,7 @@ class FileDownloadView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, file_id=None):
-        file_object = get_object_or_404(FileInfo, id=file_id)
+        file_object = FileInfo.objects.get(file_id=file_id)
 
         file_path = FILE_STORAGE + str(file_object.file_id)
         file_name = file_object.file_name
