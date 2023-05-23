@@ -1,4 +1,6 @@
+import os
 import uuid
+
 from rest_framework import serializers
 from django.http import JsonResponse
 from drf_spectacular.utils import extend_schema, inline_serializer
@@ -46,7 +48,13 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = self.queryset
-        query_set = queryset.filter(owner=self.request.user.id)
+
+        if self.is_student():
+            query_set = Course.objects.prefetch_related('students')\
+                .filter(students__student=self.request.user)
+        else:
+            query_set = queryset.filter(owner=self.request.user.id)
+
         return query_set
 
     def get_serializer_class(self):
@@ -54,6 +62,10 @@ class CourseViewSet(viewsets.ModelViewSet):
             return CoursesSerializer
         else:
             return CoursesSerializerDetail
+
+    def is_student(self):
+        roles = self.request.auth.payload['resource_access'][os.environ.get('OIDC_RP_CLIENT_ID')]['roles']
+        return 'Student' in roles
 
 
 class LectureFilesView(APIView):

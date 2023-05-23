@@ -21,6 +21,7 @@ class CourseLinkSerializer(serializers.HyperlinkedModelSerializer):
             'use_access_code',
             'access_code',
             'course_id',
+            'active',
             'owner',
             'created_at',
             'updated_at',
