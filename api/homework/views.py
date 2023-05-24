@@ -43,7 +43,6 @@ class HomeworkCreateViewSet(mixins.CreateModelMixin,
         if 'lecture_id' not in self.request.query_params:
             raise ValidationError('Missing required parameters lecture_id')
 
-
         if self.is_student():
             query_set = Homeworks.objects.filter(owner=self.request.user)
         else:
@@ -112,7 +111,8 @@ class HomeworkCreateViewSet(mixins.CreateModelMixin,
         homework = Homeworks.objects.create(lecture=lecture, file=file, owner=self.request.user)
         homework.save()
 
-        return Response(HomeworksSerializer(homework, context={'request': request}).data, status=status.HTTP_201_CREATED)
+        return Response(HomeworksSerializer(homework, context={'request': request}).data,
+                        status=status.HTTP_201_CREATED)
 
     @action(detail=True, methods=['post'], url_name='rate-lab', parser_classes=[JSONParser],
             serializer_class=RateWorkSerializer)
