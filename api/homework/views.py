@@ -2,7 +2,7 @@ import os
 import uuid
 
 from drf_spectacular.types import OpenApiTypes
-from rest_framework import serializers, viewsets, mixins
+from rest_framework import serializers, mixins
 from django.http import JsonResponse
 from drf_spectacular.utils import extend_schema, inline_serializer, OpenApiParameter
 from rest_framework import (permissions, status)
@@ -38,10 +38,16 @@ class HomeworkCreateViewSet(mixins.CreateModelMixin,
     def get_queryset(self):
         queryset = self.queryset
 
+        lecture_id = self.request.query_params.get('lecture_id')
+
+        if 'lecture_id' not in self.request.query_params:
+            raise ValidationError('Missing required parameters lecture_id')
+
+
         if self.is_student():
             query_set = Homeworks.objects.filter(owner=self.request.user)
         else:
-            query_set = queryset
+            query_set = queryset.filter(lecture_id=lecture_id)
 
         return query_set
 
